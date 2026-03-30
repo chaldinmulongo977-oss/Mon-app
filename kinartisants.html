@@ -1,0 +1,1863 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KinArtisans - Kinshasa's Premier Artisan Marketplace</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'heading': ['Space Grotesk', 'sans-serif'],
+            'body': ['DM Sans', 'sans-serif'],
+          },
+          colors: {
+            'kin': {
+              'primary': '#FF6B35',
+              'secondary': '#004E89',
+              'dark': '#1A1A2E',
+              'light': '#F8F9FA',
+              'accent': '#00A896',
+              'gold': '#FFD700'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    * { font-family: 'DM Sans', sans-serif; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.6); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+    .animate-slide-in { animation: slideIn 0.5s ease-out forwards; }
+    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+    .stagger-6 { animation-delay: 0.6s; }
+    
+    .gradient-mesh {
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(0, 78, 137, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 40% 60%, rgba(0, 168, 150, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+    }
+    
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #FF8C5A 0%, #FF6B35 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .glass-dark {
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .text-gradient {
+      background: linear-gradient(135deg, #FF6B35, #00A896);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .toast {
+      padding: 16px 24px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 500;
+      animation: slideIn 0.3s ease-out;
+      max-width: 350px;
+    }
+    
+    .toast-success { background: linear-gradient(135deg, #00A896, #00C9B7); }
+    .toast-error { background: linear-gradient(135deg, #EF4444, #F87171); }
+    .toast-info { background: linear-gradient(135deg, #004E89, #0066B3); }
+    
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90%;
+      overflow-y: auto;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    .verified-badge {
+      background: linear-gradient(135deg, #00A896, #00C9B7);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .rating-stars {
+      color: #FFD700;
+    }
+
+    .category-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link {
+      position: relative;
+      padding: 8px 0;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FF6B35;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #FF6B35;
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    }
+
+    .tab-active {
+      background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+      color: white;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full overflow-auto bg-kin-light">
+  <div id="app" class="min-h-full w-full"><!-- Toast Container -->
+   <div id="toast-container" class="toast-container"></div><!-- Navigation -->
+   <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 glass-card shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16 md:h-20"><!-- Logo --> <a href="#" onclick="navigateTo('home')" class="flex items-center gap-2 md:gap-3">
+       <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-kin-primary to-kin-accent flex items-center justify-center"><span class="text-white text-xl md:text-2xl">🛠️</span>
+       </div>
+       <div><span class="text-lg md:text-xl font-heading font-bold text-kin-dark">Kin<span class="text-kin-primary">Artisans</span></span>
+        <p class="text-[10px] md:text-xs text-gray-500 -mt-1 hidden sm:block">Kinshasa's Premier Marketplace</p>
+       </div></a> <!-- Desktop Nav -->
+      <div class="hidden lg:flex items-center gap-8"><a href="#" onclick="navigateTo('home')" class="nav-link text-kin-dark font-medium hover:text-kin-primary transition">Accueil</a> <a href="#" onclick="navigateTo('artisans')" class="nav-link text-kin-dark font-medium hover:text-kin-primary transition">Artisans</a> <a href="#" onclick="navigateTo('categories')" class="nav-link text-kin-dark font-medium hover:text-kin-primary transition">Catégories</a> <a href="#" onclick="navigateTo('about')" class="nav-link text-kin-dark font-medium hover:text-kin-primary transition">À propos</a>
+      </div><!-- Auth Buttons -->
+      <div id="nav-auth" class="flex items-center gap-2 md:gap-4"><button onclick="openModal('login')" class="px-3 py-2 md:px-5 md:py-2.5 text-kin-dark font-medium hover:text-kin-primary transition text-sm md:text-base"> Connexion </button> <button onclick="openModal('register')" class="btn-primary px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-white font-semibold text-sm md:text-base"> S'inscrire </button>
+      </div><!-- Mobile Menu Button --> <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-kin-dark">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+       </svg></button>
+     </div>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="lg:hidden hidden bg-white border-t">
+     <div class="px-4 py-4 space-y-3"><a href="#" onclick="navigateTo('home'); toggleMobileMenu()" class="block py-2 text-kin-dark font-medium">Accueil</a> <a href="#" onclick="navigateTo('artisans'); toggleMobileMenu()" class="block py-2 text-kin-dark font-medium">Artisans</a> <a href="#" onclick="navigateTo('categories'); toggleMobileMenu()" class="block py-2 text-kin-dark font-medium">Catégories</a> <a href="#" onclick="navigateTo('about'); toggleMobileMenu()" class="block py-2 text-kin-dark font-medium">À propos</a>
+     </div>
+    </div>
+   </nav><!-- Main Content Container -->
+   <main id="main-content" class="pt-16 md:pt-20"><!-- HOME PAGE -->
+    <section id="page-home" class="page-section"><!-- Hero Section -->
+     <div class="gradient-mesh min-h-[600px] md:min-h-[700px] relative overflow-hidden"><!-- Decorative Elements -->
+      <div class="absolute top-20 left-10 w-20 h-20 rounded-full bg-kin-primary/20 animate-float"></div>
+      <div class="absolute bottom-40 right-20 w-32 h-32 rounded-full bg-kin-accent/20 animate-float stagger-2"></div>
+      <div class="absolute top-1/2 left-1/4 w-16 h-16 rounded-full bg-kin-secondary/20 animate-float stagger-3"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-32 pb-20 relative z-10">
+       <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-center lg:text-left">
+         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white mb-6 animate-fade-in-up"><span class="w-2 h-2 bg-kin-accent rounded-full animate-pulse"></span> <span class="text-sm font-medium">+500 Artisans Vérifiés à Kinshasa</span>
+         </div>
+         <h1 id="hero-title" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-tight mb-6 animate-fade-in-up stagger-1">Trouvez les Meilleurs <span class="text-gradient">Artisans</span> de Kinshasa</h1>
+         <p id="hero-subtitle" class="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up stagger-2">Connectez-vous avec des professionnels qualifiés et vérifiés. Électriciens, plombiers, menuisiers, et plus encore — tous à portée de clic.</p>
+         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up stagger-3"><button id="cta-button" onclick="navigateTo('artisans')" class="btn-primary px-8 py-4 rounded-2xl text-white font-bold text-lg animate-pulse-glow"> 🔍 Trouver un Artisan </button> <button onclick="openModal('register-artisan')" class="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold hover:bg-white/20 transition"> 👷 Devenir Artisan </button>
+         </div><!-- Stats -->
+         <div class="grid grid-cols-3 gap-6 mt-12 animate-fade-in-up stagger-4">
+          <div class="text-center">
+           <div class="text-3xl md:text-4xl font-bold text-white">
+            500+
+           </div>
+           <div class="text-sm text-gray-400">
+            Artisans
+           </div>
+          </div>
+          <div class="text-center">
+           <div class="text-3xl md:text-4xl font-bold text-white">
+            10K+
+           </div>
+           <div class="text-sm text-gray-400">
+            Clients
+           </div>
+          </div>
+          <div class="text-center">
+           <div class="text-3xl md:text-4xl font-bold text-white">
+            4.8
+           </div>
+           <div class="text-sm text-gray-400">
+            Note Moyenne
+           </div>
+          </div>
+         </div>
+        </div><!-- Hero Image/Illustration -->
+        <div class="hidden lg:block relative animate-fade-in-up stagger-4">
+         <div class="relative w-full aspect-square max-w-lg mx-auto"><!-- Central Circle -->
+          <div class="absolute inset-0 rounded-full bg-gradient-to-br from-kin-primary/30 to-kin-accent/30 animate-pulse"></div><!-- Floating Artisan Cards -->
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 glass-card p-4 rounded-2xl shadow-2xl animate-float">
+           <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-2xl">
+             ⚡
+            </div>
+            <div>
+             <div class="font-semibold text-kin-dark">
+              Électricien
+             </div>
+             <div class="text-xs text-gray-500">
+              Disponible maintenant
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="absolute bottom-10 left-0 glass-card p-4 rounded-2xl shadow-2xl animate-float stagger-2">
+           <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
+             🔧
+            </div>
+            <div>
+             <div class="font-semibold text-kin-dark">
+              Plombier
+             </div>
+             <div class="text-xs text-gray-500">
+              15+ ans d'expérience
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="absolute bottom-20 right-0 glass-card p-4 rounded-2xl shadow-2xl animate-float stagger-3">
+           <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-2xl">
+             🪚
+            </div>
+            <div>
+             <div class="font-semibold text-kin-dark">
+              Menuisier
+             </div>
+             <div class="text-xs text-kin-accent flex items-center gap-1"><span>⭐ 4.9</span> <span class="text-gray-400">(120 avis)</span>
+             </div>
+            </div>
+           </div>
+          </div><!-- Central Icon -->
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+           <div class="w-32 h-32 rounded-3xl bg-gradient-to-br from-kin-primary to-kin-accent flex items-center justify-center shadow-2xl"><span class="text-6xl">🛠️</span>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div><!-- Wave Divider -->
+      <div class="absolute bottom-0 left-0 right-0">
+       <svg viewbox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#F8F9FA" />
+       </svg>
+      </div>
+     </div><!-- Categories Section -->
+     <div class="py-20 bg-kin-light">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="text-center mb-16"><span class="inline-block px-4 py-2 rounded-full bg-kin-primary/10 text-kin-primary font-semibold text-sm mb-4"> SERVICES POPULAIRES </span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-kin-dark mb-4">Explorez Nos Catégories</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Des professionnels qualifiés dans tous les domaines pour répondre à vos besoins</p>
+       </div>
+       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"><!-- Category Cards --> <button onclick="filterByCategory('electricien')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-yellow-100 group-hover:bg-yellow-200 mx-auto mb-4">
+          ⚡
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Électricien</h3><p class="text-sm text-gray-500">45 artisans</p></button> <button onclick="filterByCategory('plombier')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-blue-100 group-hover:bg-blue-200 mx-auto mb-4">
+          🔧
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Plombier</h3><p class="text-sm text-gray-500">38 artisans</p></button> <button onclick="filterByCategory('menuisier')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-orange-100 group-hover:bg-orange-200 mx-auto mb-4">
+          🪚
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Menuisier</h3><p class="text-sm text-gray-500">52 artisans</p></button> <button onclick="filterByCategory('mecanicien')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-gray-100 group-hover:bg-gray-200 mx-auto mb-4">
+          🚗
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Mécanicien</h3><p class="text-sm text-gray-500">67 artisans</p></button> <button onclick="filterByCategory('couturier')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-pink-100 group-hover:bg-pink-200 mx-auto mb-4">
+          🧵
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Couturier</h3><p class="text-sm text-gray-500">89 artisans</p></button> <button onclick="filterByCategory('peintre')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-purple-100 group-hover:bg-purple-200 mx-auto mb-4">
+          🎨
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Peintre</h3><p class="text-sm text-gray-500">34 artisans</p></button> <button onclick="filterByCategory('reparateur')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-green-100 group-hover:bg-green-200 mx-auto mb-4">
+          📱
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Réparateur</h3><p class="text-sm text-gray-500">56 artisans</p></button> <button onclick="filterByCategory('maçon')" class="card-hover glass-card p-6 rounded-2xl text-center group">
+         <div class="category-icon bg-red-100 group-hover:bg-red-200 mx-auto mb-4">
+          🧱
+         </div><h3 class="font-heading font-semibold text-kin-dark mb-1">Maçon</h3><p class="text-sm text-gray-500">41 artisans</p></button>
+       </div>
+      </div>
+     </div><!-- Featured Artisans -->
+     <div class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
+        <div><span class="inline-block px-4 py-2 rounded-full bg-kin-accent/10 text-kin-accent font-semibold text-sm mb-4"> ARTISANS VEDETTES </span>
+         <h2 class="text-3xl md:text-4xl font-heading font-bold text-kin-dark">Nos Meilleurs Professionnels</h2>
+        </div><button onclick="navigateTo('artisans')" class="mt-4 md:mt-0 text-kin-primary font-semibold hover:underline flex items-center gap-2"> Voir tous les artisans 
+         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+         </svg></button>
+       </div>
+       <div id="featured-artisans" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Artisan cards will be rendered here -->
+       </div>
+      </div>
+     </div><!-- How It Works -->
+     <div class="py-20 bg-gradient-to-br from-kin-dark to-[#16213E]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="text-center mb-16"><span class="inline-block px-4 py-2 rounded-full bg-white/10 text-white font-semibold text-sm mb-4"> COMMENT ÇA MARCHE </span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-4">Simple. Rapide. Fiable.</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Trouvez l'artisan parfait en quelques clics</p>
+       </div>
+       <div class="grid md:grid-cols-3 gap-8"><!-- Step 1 -->
+        <div class="relative">
+         <div class="glass-dark p-8 rounded-3xl text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-kin-primary to-kin-accent flex items-center justify-center text-3xl mx-auto mb-6">
+           🔍
+          </div>
+          <div class="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-kin-primary flex items-center justify-center font-bold text-white">
+           1
+          </div>
+          <h3 class="text-xl font-heading font-bold text-white mb-3">Recherchez</h3>
+          <p class="text-gray-400">Parcourez notre liste d'artisans qualifiés ou utilisez la recherche pour trouver le professionnel idéal.</p>
+         </div>
+        </div><!-- Step 2 -->
+        <div class="relative md:mt-8">
+         <div class="glass-dark p-8 rounded-3xl text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-kin-secondary to-blue-400 flex items-center justify-center text-3xl mx-auto mb-6">
+           📋
+          </div>
+          <div class="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-kin-secondary flex items-center justify-center font-bold text-white">
+           2
+          </div>
+          <h3 class="text-xl font-heading font-bold text-white mb-3">Comparez</h3>
+          <p class="text-gray-400">Consultez les profils, avis et tarifs pour choisir l'artisan qui correspond à vos besoins et budget.</p>
+         </div>
+        </div><!-- Step 3 -->
+        <div class="relative">
+         <div class="glass-dark p-8 rounded-3xl text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-kin-accent to-green-400 flex items-center justify-center text-3xl mx-auto mb-6">
+           ✅
+          </div>
+          <div class="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-kin-accent flex items-center justify-center font-bold text-white">
+           3
+          </div>
+          <h3 class="text-xl font-heading font-bold text-white mb-3">Réservez</h3>
+          <p class="text-gray-400">Contactez l'artisan directement, demandez un devis et planifiez votre intervention.</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Testimonials -->
+     <div class="py-20 bg-kin-light">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="text-center mb-16"><span class="inline-block px-4 py-2 rounded-full bg-kin-secondary/10 text-kin-secondary font-semibold text-sm mb-4"> TÉMOIGNAGES </span>
+        <h2 class="text-3xl md:text-4xl font-heading font-bold text-kin-dark mb-4">Ce Que Disent Nos Clients</h2>
+       </div>
+       <div class="grid md:grid-cols-3 gap-6"><!-- Testimonial 1 -->
+        <div class="glass-card p-8 rounded-3xl">
+         <div class="flex items-center gap-1 mb-4 rating-stars"><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+         </div>
+         <p class="text-gray-600 mb-6">"J'ai trouvé un électricien excellent en moins de 10 minutes. Le travail était parfait et le prix très raisonnable. Je recommande vivement KinArtisans!"</p>
+         <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kin-primary to-kin-accent flex items-center justify-center text-white font-bold">
+           JM
+          </div>
+          <div>
+           <div class="font-semibold text-kin-dark">
+            Jean-Marie K.
+           </div>
+           <div class="text-sm text-gray-500">
+            Gombe, Kinshasa
+           </div>
+          </div>
+         </div>
+        </div><!-- Testimonial 2 -->
+        <div class="glass-card p-8 rounded-3xl">
+         <div class="flex items-center gap-1 mb-4 rating-stars"><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+         </div>
+         <p class="text-gray-600 mb-6">"Le menuisier que j'ai contacté via la plateforme a fait un travail exceptionnel. Ma nouvelle armoire est magnifique. Service rapide et professionnel."</p>
+         <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kin-secondary to-blue-400 flex items-center justify-center text-white font-bold">
+           GM
+          </div>
+          <div>
+           <div class="font-semibold text-kin-dark">
+            Grace M.
+           </div>
+           <div class="text-sm text-gray-500">
+            Ngaliema, Kinshasa
+           </div>
+          </div>
+         </div>
+        </div><!-- Testimonial 3 -->
+        <div class="glass-card p-8 rounded-3xl">
+         <div class="flex items-center gap-1 mb-4 rating-stars"><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+         </div>
+         <p class="text-gray-600 mb-6">"En tant qu'artisan, KinArtisans m'a permis de développer ma clientèle. Je reçois des demandes régulières et mes revenus ont augmenté de 40%!"</p>
+         <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kin-accent to-green-400 flex items-center justify-center text-white font-bold">
+           PB
+          </div>
+          <div>
+           <div class="font-semibold text-kin-dark">
+            Patrick B.
+           </div>
+           <div class="text-sm text-gray-500">
+            Artisan Plombier
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- CTA Section -->
+     <div class="py-20 bg-gradient-to-r from-kin-primary to-kin-accent">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+       <h2 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-6">Prêt à Commencer?</h2>
+       <p class="text-xl text-white/90 mb-8">Rejoignez des milliers de Kinois qui font confiance à KinArtisans</p>
+       <div class="flex flex-col sm:flex-row gap-4 justify-center"><button onclick="openModal('register')" class="px-8 py-4 rounded-2xl bg-white text-kin-primary font-bold text-lg hover:bg-gray-100 transition shadow-xl"> Créer un Compte Gratuit </button> <button onclick="openModal('register-artisan')" class="px-8 py-4 rounded-2xl bg-white/20 border-2 border-white text-white font-bold text-lg hover:bg-white/30 transition"> Rejoindre comme Artisan </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- ARTISANS PAGE -->
+    <section id="page-artisans" class="page-section hidden">
+     <div class="bg-gradient-to-br from-kin-dark to-[#16213E] py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <h1 class="text-3xl md:text-4xl font-heading font-bold text-white mb-8 text-center">Trouvez Votre Artisan</h1><!-- Search & Filters -->
+       <div class="glass-card p-6 rounded-2xl">
+        <div class="grid md:grid-cols-4 gap-4">
+         <div class="md:col-span-2"><label for="search-input" class="block text-sm font-medium text-gray-700 mb-2">Rechercher</label> <input type="text" id="search-input" placeholder="Nom, profession, service..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-kin-primary" oninput="filterArtisans()">
+         </div>
+         <div><label for="category-filter" class="block text-sm font-medium text-gray-700 mb-2">Catégorie</label> <select id="category-filter" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-kin-primary bg-white" onchange="filterArtisans()"> <option value="">Toutes les catégories</option> <option value="electricien">Électricien</option> <option value="plombier">Plombier</option> <option value="menuisier">Menuisier</option> <option value="mecanicien">Mécanicien</option> <option value="couturier">Couturier</option> <option value="peintre">Peintre</option> <option value="reparateur">Réparateur</option> <option value="maçon">Maçon</option> </select>
+         </div>
+         <div><label for="location-filter" class="block text-sm font-medium text-gray-700 mb-2">Commune</label> <select id="location-filter" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-kin-primary bg-white" onchange="filterArtisans()"> <option value="">Toutes les communes</option> <option value="gombe">Gombe</option> <option value="ngaliema">Ngaliema</option> <option value="limete">Limete</option> <option value="bandalungwa">Bandalungwa</option> <option value="lemba">Lemba</option> <option value="matete">Matete</option> <option value="kintambo">Kintambo</option> <option value="barumbu">Barumbu</option> </select>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Artisans Grid -->
+     <div class="py-12 bg-kin-light min-h-[400px]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div id="artisans-count" class="mb-6 text-gray-600"></div>
+       <div id="artisans-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Artisan cards will be rendered here -->
+       </div>
+       <div id="no-artisans-message" class="hidden text-center py-16">
+        <div class="text-6xl mb-4">
+         🔍
+        </div>
+        <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Aucun artisan trouvé</h3>
+        <p class="text-gray-500">Essayez de modifier vos filtres de recherche</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- DASHBOARD PAGE -->
+    <section id="page-dashboard" class="page-section hidden">
+     <div class="bg-gradient-to-br from-kin-dark to-[#16213E] py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div id="dashboard-header" class="flex items-center gap-6">
+        <div id="user-avatar-large" class="w-20 h-20 rounded-2xl bg-gradient-to-br from-kin-primary to-kin-accent flex items-center justify-center text-white text-3xl font-bold">
+         U
+        </div>
+        <div>
+         <h1 id="dashboard-welcome" class="text-2xl md:text-3xl font-heading font-bold text-white">Bienvenue!</h1>
+         <p id="dashboard-subtitle" class="text-gray-400">Gérez votre compte et vos réservations</p>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="py-8 bg-kin-light min-h-[500px]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Dashboard Tabs -->
+       <div class="flex flex-wrap gap-2 mb-8"><button onclick="switchDashboardTab('overview')" class="dashboard-tab tab-active px-6 py-3 rounded-xl font-semibold transition" data-tab="overview"> Vue d'ensemble </button> <button onclick="switchDashboardTab('bookings')" class="dashboard-tab px-6 py-3 rounded-xl font-semibold bg-white text-gray-600 hover:bg-gray-50 transition" data-tab="bookings"> Réservations </button> <button onclick="switchDashboardTab('reviews')" class="dashboard-tab px-6 py-3 rounded-xl font-semibold bg-white text-gray-600 hover:bg-gray-50 transition" data-tab="reviews"> Avis </button> <button onclick="switchDashboardTab('profile')" class="dashboard-tab px-6 py-3 rounded-xl font-semibold bg-white text-gray-600 hover:bg-gray-50 transition" data-tab="profile"> Profil </button>
+       </div><!-- Dashboard Content -->
+       <div id="dashboard-content"><!-- Overview Tab -->
+        <div id="tab-overview" class="dashboard-tab-content">
+         <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="glass-card p-6 rounded-2xl">
+           <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-xl bg-kin-primary/10 flex items-center justify-center text-2xl">
+             📋
+            </div>
+            <div>
+             <div id="stat-bookings" class="text-3xl font-bold text-kin-dark">
+              0
+             </div>
+             <div class="text-gray-500">
+              Réservations
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="glass-card p-6 rounded-2xl">
+           <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-xl bg-kin-accent/10 flex items-center justify-center text-2xl">
+             ⭐
+            </div>
+            <div>
+             <div id="stat-reviews" class="text-3xl font-bold text-kin-dark">
+              0
+             </div>
+             <div class="text-gray-500">
+              Avis donnés
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="glass-card p-6 rounded-2xl">
+           <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-xl bg-kin-secondary/10 flex items-center justify-center text-2xl">
+             💬
+            </div>
+            <div>
+             <div id="stat-messages" class="text-3xl font-bold text-kin-dark">
+              0
+             </div>
+             <div class="text-gray-500">
+              Messages
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="glass-card p-6 rounded-2xl">
+          <h3 class="text-xl font-heading font-bold text-kin-dark mb-4">Activité Récente</h3>
+          <div id="recent-activity" class="space-y-4">
+           <p class="text-gray-500 text-center py-8">Aucune activité récente</p>
+          </div>
+         </div>
+        </div><!-- Bookings Tab -->
+        <div id="tab-bookings" class="dashboard-tab-content hidden">
+         <div class="glass-card p-6 rounded-2xl">
+          <h3 class="text-xl font-heading font-bold text-kin-dark mb-4">Mes Réservations</h3>
+          <div id="bookings-list" class="space-y-4">
+           <p class="text-gray-500 text-center py-8">Vous n'avez pas encore de réservations</p>
+          </div>
+         </div>
+        </div><!-- Reviews Tab -->
+        <div id="tab-reviews" class="dashboard-tab-content hidden">
+         <div class="glass-card p-6 rounded-2xl">
+          <h3 class="text-xl font-heading font-bold text-kin-dark mb-4">Mes Avis</h3>
+          <div id="reviews-list" class="space-y-4">
+           <p class="text-gray-500 text-center py-8">Vous n'avez pas encore donné d'avis</p>
+          </div>
+         </div>
+        </div><!-- Profile Tab -->
+        <div id="tab-profile" class="dashboard-tab-content hidden">
+         <div class="glass-card p-6 rounded-2xl">
+          <h3 class="text-xl font-heading font-bold text-kin-dark mb-6">Mon Profil</h3>
+          <form id="profile-form" onsubmit="updateProfile(event)" class="space-y-6">
+           <div class="grid md:grid-cols-2 gap-6">
+            <div><label for="profile-name" class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label> <input type="text" id="profile-name" class="w-full px-4 py-3 rounded-xl border border-gray-200">
+            </div>
+            <div><label for="profile-email" class="block text-sm font-medium text-gray-700 mb-2">Email</label> <input type="email" id="profile-email" class="w-full px-4 py-3 rounded-xl border border-gray-200">
+            </div>
+            <div><label for="profile-phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label> <input type="tel" id="profile-phone" class="w-full px-4 py-3 rounded-xl border border-gray-200">
+            </div>
+            <div><label for="profile-location" class="block text-sm font-medium text-gray-700 mb-2">Commune</label> <select id="profile-location" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white"> <option value="">Sélectionnez</option> <option value="gombe">Gombe</option> <option value="ngaliema">Ngaliema</option> <option value="limete">Limete</option> <option value="bandalungwa">Bandalungwa</option> <option value="lemba">Lemba</option> </select>
+            </div>
+           </div><button type="submit" class="btn-primary px-8 py-3 rounded-xl text-white font-semibold"> Sauvegarder </button>
+          </form>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- ARTISAN PROFILE PAGE -->
+    <section id="page-artisan-profile" class="page-section hidden">
+     <div id="artisan-profile-content"><!-- Content will be dynamically loaded -->
+     </div>
+    </section><!-- CATEGORIES PAGE -->
+    <section id="page-categories" class="page-section hidden">
+     <div class="bg-gradient-to-br from-kin-dark to-[#16213E] py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+       <h1 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Toutes les Catégories</h1>
+       <p class="text-gray-400 max-w-2xl mx-auto">Découvrez tous nos services et trouvez l'artisan qu'il vous faut</p>
+      </div>
+     </div>
+     <div class="py-12 bg-kin-light">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6"><!-- Category Cards with more details -->
+        <div onclick="filterByCategory('electricien')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-yellow-100 mb-4 text-3xl">
+          ⚡
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Électricien</h3>
+         <p class="text-gray-500 text-sm mb-4">Installation, dépannage, mise aux normes électriques</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">45 artisans</span> <span class="text-gray-400">À partir de 5,000 FC</span>
+         </div>
+        </div>
+        <div onclick="filterByCategory('plombier')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-blue-100 mb-4 text-3xl">
+          🔧
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Plombier</h3>
+         <p class="text-gray-500 text-sm mb-4">Réparation, installation sanitaire, débouchage</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">38 artisans</span> <span class="text-gray-400">À partir de 8,000 FC</span>
+         </div>
+        </div>
+        <div onclick="filterByCategory('menuisier')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-orange-100 mb-4 text-3xl">
+          🪚
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Menuisier</h3>
+         <p class="text-gray-500 text-sm mb-4">Meubles sur mesure, réparation, décoration bois</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">52 artisans</span> <span class="text-gray-400">À partir de 15,000 FC</span>
+         </div>
+        </div>
+        <div onclick="filterByCategory('mecanicien')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-gray-200 mb-4 text-3xl">
+          🚗
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Mécanicien</h3>
+         <p class="text-gray-500 text-sm mb-4">Réparation auto, entretien, diagnostic</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">67 artisans</span> <span class="text-gray-400">À partir de 10,000 FC</span>
+         </div>
+        </div>
+        <div onclick="filterByCategory('couturier')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-pink-100 mb-4 text-3xl">
+          🧵
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Couturier</h3>
+         <p class="text-gray-500 text-sm mb-4">Confection, retouches, modèles traditionnels</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">89 artisans</span> <span class="text-gray-400">À partir de 3,000 FC</span>
+         </div>
+        </div>
+        <div onclick="filterByCategory('peintre')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-purple-100 mb-4 text-3xl">
+          🎨
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Peintre</h3>
+         <p class="text-gray-500 text-sm mb-4">Peinture intérieure, extérieure, décoration</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">34 artisans</span> <span class="text-gray-400">À partir de 20,000 FC</span>
+         </div>
+        </div>
+        <div onclick="filterByCategory('reparateur')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-green-100 mb-4 text-3xl">
+          📱
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Réparateur</h3>
+         <p class="text-gray-500 text-sm mb-4">Téléphones, tablettes, ordinateurs</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">56 artisans</span> <span class="text-gray-400">À partir de 5,000 FC</span>
+         </div>
+        </div>
+        <div onclick="filterByCategory('maçon')" class="card-hover glass-card p-8 rounded-2xl cursor-pointer">
+         <div class="category-icon bg-red-100 mb-4 text-3xl">
+          🧱
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Maçon</h3>
+         <p class="text-gray-500 text-sm mb-4">Construction, rénovation, carrelage</p>
+         <div class="flex items-center justify-between text-sm"><span class="text-kin-primary font-semibold">41 artisans</span> <span class="text-gray-400">À partir de 25,000 FC</span>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- ABOUT PAGE -->
+    <section id="page-about" class="page-section hidden">
+     <div class="bg-gradient-to-br from-kin-dark to-[#16213E] py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+       <h1 class="text-3xl md:text-5xl font-heading font-bold text-white mb-6">À Propos de KinArtisans</h1>
+       <p class="text-xl text-gray-400 max-w-3xl mx-auto">La première plateforme de mise en relation entre clients et artisans qualifiés à Kinshasa</p>
+      </div>
+     </div>
+     <div class="py-16 bg-kin-light">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="glass-card p-8 md:p-12 rounded-3xl mb-8">
+        <h2 class="text-2xl font-heading font-bold text-kin-dark mb-4">Notre Mission</h2>
+        <p class="text-gray-600 leading-relaxed">KinArtisans est née d'un constat simple : trouver un artisan de confiance à Kinshasa peut être un véritable parcours du combattant. Notre mission est de connecter les habitants de Kinshasa avec des artisans qualifiés, vérifiés et fiables, tout en offrant aux professionnels une vitrine pour développer leur activité.</p>
+       </div>
+       <div class="grid md:grid-cols-2 gap-6">
+        <div class="glass-card p-8 rounded-2xl">
+         <div class="w-14 h-14 rounded-xl bg-kin-primary/10 flex items-center justify-center text-2xl mb-4">
+          ✓
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Artisans Vérifiés</h3>
+         <p class="text-gray-500">Chaque artisan passe par un processus de vérification rigoureux</p>
+        </div>
+        <div class="glass-card p-8 rounded-2xl">
+         <div class="w-14 h-14 rounded-xl bg-kin-accent/10 flex items-center justify-center text-2xl mb-4">
+          🔒
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Transactions Sécurisées</h3>
+         <p class="text-gray-500">Paiements protégés et garantie satisfaction</p>
+        </div>
+        <div class="glass-card p-8 rounded-2xl">
+         <div class="w-14 h-14 rounded-xl bg-kin-secondary/10 flex items-center justify-center text-2xl mb-4">
+          ⭐
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Avis Authentiques</h3>
+         <p class="text-gray-500">Des évaluations réelles de clients vérifiés</p>
+        </div>
+        <div class="glass-card p-8 rounded-2xl">
+         <div class="w-14 h-14 rounded-xl bg-yellow-100 flex items-center justify-center text-2xl mb-4">
+          📞
+         </div>
+         <h3 class="text-xl font-heading font-bold text-kin-dark mb-2">Support 24/7</h3>
+         <p class="text-gray-500">Une équipe disponible pour vous accompagner</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </main><!-- Footer -->
+   <footer class="bg-kin-dark py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="grid md:grid-cols-4 gap-8 mb-12">
+      <div>
+       <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-kin-primary to-kin-accent flex items-center justify-center"><span class="text-white text-2xl">🛠️</span>
+        </div><span class="text-xl font-heading font-bold text-white">KinArtisans</span>
+       </div>
+       <p class="text-gray-400 text-sm">La plateforme de référence pour trouver des artisans qualifiés à Kinshasa.</p>
+      </div>
+      <div>
+       <h4 class="font-heading font-semibold text-white mb-4">Navigation</h4>
+       <ul class="space-y-2">
+        <li><a href="#" onclick="navigateTo('home')" class="text-gray-400 hover:text-white transition">Accueil</a></li>
+        <li><a href="#" onclick="navigateTo('artisans')" class="text-gray-400 hover:text-white transition">Artisans</a></li>
+        <li><a href="#" onclick="navigateTo('categories')" class="text-gray-400 hover:text-white transition">Catégories</a></li>
+        <li><a href="#" onclick="navigateTo('about')" class="text-gray-400 hover:text-white transition">À propos</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="font-heading font-semibold text-white mb-4">Catégories</h4>
+       <ul class="space-y-2">
+        <li><a href="#" onclick="filterByCategory('electricien')" class="text-gray-400 hover:text-white transition">Électriciens</a></li>
+        <li><a href="#" onclick="filterByCategory('plombier')" class="text-gray-400 hover:text-white transition">Plombiers</a></li>
+        <li><a href="#" onclick="filterByCategory('menuisier')" class="text-gray-400 hover:text-white transition">Menuisiers</a></li>
+        <li><a href="#" onclick="filterByCategory('mecanicien')" class="text-gray-400 hover:text-white transition">Mécaniciens</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="font-heading font-semibold text-white mb-4">Contact</h4>
+       <ul class="space-y-2 text-gray-400 text-sm">
+        <li>📍 Kinshasa, RDC</li>
+        <li>📧 contact@kinartisans.cd</li>
+        <li>📱 +243 99 000 0000</li>
+       </ul>
+      </div>
+     </div>
+     <div class="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+      © 2024 KinArtisans. Tous droits réservés.
+     </div>
+    </div>
+   </footer><!-- MODALS -->
+   <div id="modal-container"></div>
+  </div>
+  <script>
+    // ==================== CONFIGURATION ====================
+    const defaultConfig = {
+      hero_title: 'Trouvez les Meilleurs Artisans de Kinshasa',
+      hero_subtitle: 'Connectez-vous avec des professionnels qualifiés et vérifiés. Électriciens, plombiers, menuisiers, et plus encore — tous à portée de clic.',
+      cta_button_text: '🔍 Trouver un Artisan',
+      background_color: '#1A1A2E',
+      surface_color: '#FFFFFF',
+      text_color: '#1A1A2E',
+      primary_action_color: '#FF6B35',
+      secondary_action_color: '#00A896'
+    };
+    
+    let config = { ...defaultConfig };
+    
+    // ==================== APP STATE ====================
+    let appState = {
+      currentUser: null,
+      artisans: [],
+      bookings: [],
+      reviews: [],
+      users: [],
+      currentPage: 'home',
+      selectedArtisan: null
+    };
+    
+    // Sample artisans data (reference content)
+    const sampleArtisans = [
+      { id: 'art1', name: 'Emmanuel Kabongo', profession: 'electricien', location: 'gombe', description: 'Électricien certifié avec 15 ans d\'expérience. Spécialisé en installation et dépannage.', rating: 4.9, reviews_count: 127, verified: true, avatar_seed: 'emmanuel' },
+      { id: 'art2', name: 'Patrick Mutombo', profession: 'plombier', location: 'ngaliema', description: 'Expert en plomberie résidentielle et commerciale. Intervention rapide 24h/24.', rating: 4.8, reviews_count: 98, verified: true, avatar_seed: 'patrick' },
+      { id: 'art3', name: 'Jean-Pierre Lukusa', profession: 'menuisier', location: 'limete', description: 'Artisan menuisier créateur de meubles sur mesure. Travail soigné et moderne.', rating: 4.7, reviews_count: 156, verified: true, avatar_seed: 'jeanpierre' },
+      { id: 'art4', name: 'Didier Kasongo', profession: 'mecanicien', location: 'bandalungwa', description: 'Mécanicien auto toutes marques. Diagnostic électronique et réparations.', rating: 4.6, reviews_count: 203, verified: true, avatar_seed: 'didier' },
+      { id: 'art5', name: 'Marie Mwamba', profession: 'couturier', location: 'lemba', description: 'Couturière créatrice de mode africaine. Robes de cérémonie et tenues traditionnelles.', rating: 4.9, reviews_count: 245, verified: true, avatar_seed: 'marie' },
+      { id: 'art6', name: 'Joseph Tshimanga', profession: 'peintre', location: 'matete', description: 'Peintre en bâtiment professionnel. Travaux intérieurs et extérieurs.', rating: 4.5, reviews_count: 67, verified: false, avatar_seed: 'joseph' },
+      { id: 'art7', name: 'David Nkulu', profession: 'reparateur', location: 'kintambo', description: 'Réparateur smartphones et ordinateurs. Toutes marques, garantie pièces.', rating: 4.8, reviews_count: 189, verified: true, avatar_seed: 'david' },
+      { id: 'art8', name: 'Simon Ngoy', profession: 'maçon', location: 'barumbu', description: 'Maçon expérimenté pour construction et rénovation. Travaux soignés.', rating: 4.4, reviews_count: 78, verified: false, avatar_seed: 'simon' },
+      { id: 'art9', name: 'Grace Ilunga', profession: 'couturier', location: 'gombe', description: 'Haute couture et prêt-à-porter. Collections modernes inspirées de l\'Afrique.', rating: 5.0, reviews_count: 312, verified: true, avatar_seed: 'grace' }
+    ];
+    
+    const professionIcons = {
+      'electricien': '⚡',
+      'plombier': '🔧',
+      'menuisier': '🪚',
+      'mecanicien': '🚗',
+      'couturier': '🧵',
+      'peintre': '🎨',
+      'reparateur': '📱',
+      'maçon': '🧱'
+    };
+    
+    const professionLabels = {
+      'electricien': 'Électricien',
+      'plombier': 'Plombier',
+      'menuisier': 'Menuisier',
+      'mecanicien': 'Mécanicien',
+      'couturier': 'Couturier',
+      'peintre': 'Peintre',
+      'reparateur': 'Réparateur',
+      'maçon': 'Maçon'
+    };
+    
+    const locationLabels = {
+      'gombe': 'Gombe',
+      'ngaliema': 'Ngaliema',
+      'limete': 'Limete',
+      'bandalungwa': 'Bandalungwa',
+      'lemba': 'Lemba',
+      'matete': 'Matete',
+      'kintambo': 'Kintambo',
+      'barumbu': 'Barumbu'
+    };
+    
+    // ==================== TOAST NOTIFICATIONS ====================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+    
+    // ==================== NAVIGATION ====================
+    function navigateTo(page) {
+      // Hide all pages
+      document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
+      
+      // Show requested page
+      const pageEl = document.getElementById(`page-${page}`);
+      if (pageEl) {
+        pageEl.classList.remove('hidden');
+        appState.currentPage = page;
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Page-specific actions
+        if (page === 'artisans') {
+          renderArtisansGrid();
+        } else if (page === 'home') {
+          renderFeaturedArtisans();
+        } else if (page === 'dashboard') {
+          if (!appState.currentUser) {
+            openModal('login');
+            navigateTo('home');
+            return;
+          }
+          renderDashboard();
+        }
+      }
+    }
+    
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+    
+    // ==================== ARTISAN RENDERING ====================
+    function createArtisanCard(artisan, featured = false) {
+      const icon = professionIcons[artisan.profession] || '👷';
+      const profLabel = professionLabels[artisan.profession] || artisan.profession;
+      const locLabel = locationLabels[artisan.location] || artisan.location;
+      
+      return `
+        <div class="card-hover glass-card rounded-2xl overflow-hidden ${featured ? 'animate-fade-in-up' : ''}">
+          <div class="relative h-48 bg-gradient-to-br from-kin-secondary to-kin-dark flex items-center justify-center">
+            <div class="text-7xl opacity-30 absolute">${icon}</div>
+            <div class="w-24 h-24 rounded-2xl bg-white shadow-xl flex items-center justify-center relative z-10">
+              <span class="text-4xl">${icon}</span>
+            </div>
+            ${artisan.verified ? `
+              <div class="absolute top-4 right-4 verified-badge">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                Vérifié
+              </div>
+            ` : ''}
+          </div>
+          <div class="p-6">
+            <div class="flex items-start justify-between mb-2">
+              <div>
+                <h3 class="font-heading font-bold text-kin-dark text-lg">${artisan.name}</h3>
+                <p class="text-kin-primary font-medium">${profLabel}</p>
+              </div>
+              <div class="flex items-center gap-1 text-sm">
+                <span class="text-yellow-500">⭐</span>
+                <span class="font-semibold text-kin-dark">${artisan.rating}</span>
+                <span class="text-gray-400">(${artisan.reviews_count})</span>
+              </div>
+            </div>
+            <p class="text-gray-500 text-sm mb-4 line-clamp-2">${artisan.description}</p>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-400 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                ${locLabel}
+              </span>
+              <button onclick="viewArtisanProfile('${artisan.id}')" class="btn-primary px-4 py-2 rounded-lg text-white text-sm font-medium">
+                Voir profil
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderFeaturedArtisans() {
+      const container = document.getElementById('featured-artisans');
+      const featured = sampleArtisans.filter(a => a.verified).slice(0, 6);
+      container.innerHTML = featured.map((a, i) => 
+        `<div class="stagger-${i + 1}">${createArtisanCard(a, true)}</div>`
+      ).join('');
+    }
+    
+    function renderArtisansGrid() {
+      const searchInput = document.getElementById('search-input');
+      const categoryFilter = document.getElementById('category-filter');
+      const locationFilter = document.getElementById('location-filter');
+      
+      const search = searchInput ? searchInput.value.toLowerCase() : '';
+      const category = categoryFilter ? categoryFilter.value : '';
+      const location = locationFilter ? locationFilter.value : '';
+      
+      let filtered = sampleArtisans.filter(a => {
+        const matchSearch = !search || 
+          a.name.toLowerCase().includes(search) || 
+          a.profession.toLowerCase().includes(search) ||
+          a.description.toLowerCase().includes(search);
+        const matchCategory = !category || a.profession === category;
+        const matchLocation = !location || a.location === location;
+        return matchSearch && matchCategory && matchLocation;
+      });
+      
+      const grid = document.getElementById('artisans-grid');
+      const countEl = document.getElementById('artisans-count');
+      const noResults = document.getElementById('no-artisans-message');
+      
+      if (filtered.length === 0) {
+        grid.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        countEl.textContent = '';
+      } else {
+        grid.classList.remove('hidden');
+        noResults.classList.add('hidden');
+        countEl.textContent = `${filtered.length} artisan${filtered.length > 1 ? 's' : ''} trouvé${filtered.length > 1 ? 's' : ''}`;
+        grid.innerHTML = filtered.map(a => createArtisanCard(a)).join('');
+      }
+    }
+    
+    function filterArtisans() {
+      renderArtisansGrid();
+    }
+    
+    function filterByCategory(category) {
+      navigateTo('artisans');
+      setTimeout(() => {
+        const categoryFilter = document.getElementById('category-filter');
+        if (categoryFilter) {
+          categoryFilter.value = category;
+          filterArtisans();
+        }
+      }, 100);
+    }
+    
+    // ==================== ARTISAN PROFILE ====================
+    function viewArtisanProfile(artisanId) {
+      const artisan = sampleArtisans.find(a => a.id === artisanId);
+      if (!artisan) return;
+      
+      appState.selectedArtisan = artisan;
+      const icon = professionIcons[artisan.profession] || '👷';
+      const profLabel = professionLabels[artisan.profession] || artisan.profession;
+      const locLabel = locationLabels[artisan.location] || artisan.location;
+      
+      const content = document.getElementById('artisan-profile-content');
+      content.innerHTML = `
+        <div class="bg-gradient-to-br from-kin-dark to-[#16213E] py-16 relative overflow-hidden">
+          <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-kin-primary animate-float"></div>
+            <div class="absolute bottom-10 right-20 w-24 h-24 rounded-full bg-kin-accent animate-float stagger-2"></div>
+          </div>
+          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <button onclick="navigateTo('artisans')" class="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+              Retour aux artisans
+            </button>
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+              <div class="w-32 h-32 rounded-3xl bg-white shadow-2xl flex items-center justify-center">
+                <span class="text-6xl">${icon}</span>
+              </div>
+              <div class="text-center md:text-left">
+                <div class="flex items-center gap-3 justify-center md:justify-start mb-2">
+                  <h1 class="text-3xl md:text-4xl font-heading font-bold text-white">${artisan.name}</h1>
+                  ${artisan.verified ? '<span class="verified-badge">✓ Vérifié</span>' : ''}
+                </div>
+                <p class="text-xl text-kin-primary font-medium mb-2">${profLabel}</p>
+                <div class="flex items-center gap-4 justify-center md:justify-start text-gray-400">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    </svg>
+                    ${locLabel}
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <span class="text-yellow-500">⭐</span>
+                    ${artisan.rating} (${artisan.reviews_count} avis)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="py-12 bg-kin-light">
+          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+              <div class="md:col-span-2 space-y-6">
+                <div class="glass-card p-6 rounded-2xl">
+                  <h2 class="text-xl font-heading font-bold text-kin-dark mb-4">À propos</h2>
+                  <p class="text-gray-600">${artisan.description}</p>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl">
+                  <h2 class="text-xl font-heading font-bold text-kin-dark mb-4">Services proposés</h2>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="flex items-center gap-2 text-gray-600">
+                      <svg class="w-5 h-5 text-kin-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      Installation
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                      <svg class="w-5 h-5 text-kin-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      Réparation
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                      <svg class="w-5 h-5 text-kin-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      Dépannage urgent
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                      <svg class="w-5 h-5 text-kin-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      Conseil gratuit
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl">
+                  <h2 class="text-xl font-heading font-bold text-kin-dark mb-4">Avis clients</h2>
+                  <div class="space-y-4">
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                        <span class="font-semibold text-kin-dark">Excellent travail!</span>
+                      </div>
+                      <p class="text-gray-600 text-sm">Service rapide et professionnel. Je recommande vivement!</p>
+                      <p class="text-gray-400 text-xs mt-2">- Client vérifié</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                        <span class="font-semibold text-kin-dark">Très satisfait</span>
+                      </div>
+                      <p class="text-gray-600 text-sm">Ponctuel, compétent et prix raisonnable. Parfait!</p>
+                      <p class="text-gray-400 text-xs mt-2">- Client vérifié</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="space-y-6">
+                <div class="glass-card p-6 rounded-2xl sticky top-24">
+                  <h3 class="text-lg font-heading font-bold text-kin-dark mb-4">Contacter ${artisan.name.split(' ')[0]}</h3>
+                  <form onsubmit="submitBookingRequest(event, '${artisan.id}')" class="space-y-4">
+                    <div>
+                      <label for="booking-description" class="block text-sm font-medium text-gray-700 mb-2">Description du travail</label>
+                      <textarea id="booking-description" rows="3" required class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="Décrivez votre besoin..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full btn-primary py-3 rounded-xl text-white font-semibold">
+                      Demander un devis
+                    </button>
+                    <button type="button" onclick="openChat('${artisan.id}')" class="w-full py-3 rounded-xl border-2 border-kin-secondary text-kin-secondary font-semibold hover:bg-kin-secondary/5 transition">
+                      💬 Envoyer un message
+                    </button>
+                  </form>
+                  <div class="mt-6 pt-6 border-t">
+                    <div class="flex items-center gap-3 text-sm text-gray-500">
+                      <svg class="w-5 h-5 text-kin-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                      </svg>
+                      Réponse sous 24h
+                    </div>
+                    <div class="flex items-center gap-3 text-sm text-gray-500 mt-2">
+                      <svg class="w-5 h-5 text-kin-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                      </svg>
+                      Devis gratuit
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      navigateTo('artisan-profile');
+    }
+    
+    // ==================== MODALS ====================
+    function openModal(type) {
+      const container = document.getElementById('modal-container');
+      let modalContent = '';
+      
+      switch(type) {
+        case 'login':
+          modalContent = `
+            <div class="modal-overlay" onclick="closeModal(event)">
+              <div class="modal-content p-8" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="text-2xl font-heading font-bold text-kin-dark">Connexion</h2>
+                  <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+                <form onsubmit="handleLogin(event)" class="space-y-4">
+                  <div>
+                    <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="login-email" required class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="votre@email.com">
+                  </div>
+                  <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" id="login-password" required class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="••••••••">
+                  </div>
+                  <button type="submit" class="w-full btn-primary py-3 rounded-xl text-white font-semibold">
+                    Se connecter
+                  </button>
+                </form>
+                <p class="text-center mt-6 text-gray-500">
+                  Pas encore de compte? 
+                  <button onclick="closeModal(); openModal('register')" class="text-kin-primary font-semibold hover:underline">S'inscrire</button>
+                </p>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'register':
+          modalContent = `
+            <div class="modal-overlay" onclick="closeModal(event)">
+              <div class="modal-content p-8" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="text-2xl font-heading font-bold text-kin-dark">Créer un compte</h2>
+                  <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+                <form onsubmit="handleRegister(event)" class="space-y-4">
+                  <div>
+                    <label for="reg-name" class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" id="reg-name" required class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="Jean Dupont">
+                  </div>
+                  <div>
+                    <label for="reg-email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="reg-email" required class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="votre@email.com">
+                  </div>
+                  <div>
+                    <label for="reg-phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                    <input type="tel" id="reg-phone" required class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="+243 99 000 0000">
+                  </div>
+                  <div>
+                    <label for="reg-password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" id="reg-password" required minlength="6" class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="••••••••">
+                  </div>
+                  <button type="submit" class="w-full btn-primary py-3 rounded-xl text-white font-semibold">
+                    Créer mon compte
+                  </button>
+                </form>
+                <p class="text-center mt-6 text-gray-500">
+                  Déjà un compte? 
+                  <button onclick="closeModal(); openModal('login')" class="text-kin-primary font-semibold hover:underline">Se connecter</button>
+                </p>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'register-artisan':
+          modalContent = `
+            <div class="modal-overlay" onclick="closeModal(event)">
+              <div class="modal-content p-8 max-h-[90%] overflow-y-auto" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="text-2xl font-heading font-bold text-kin-dark">Devenir Artisan</h2>
+                  <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+                <form onsubmit="handleArtisanRegister(event)" class="space-y-4">
+                  <div>
+                    <label for="art-name" class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" id="art-name" required class="w-full px-4 py-3 rounded-xl border border-gray-200">
+                  </div>
+                  <div>
+                    <label for="art-email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="art-email" required class="w-full px-4 py-3 rounded-xl border border-gray-200">
+                  </div>
+                  <div>
+                    <label for="art-phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                    <input type="tel" id="art-phone" required class="w-full px-4 py-3 rounded-xl border border-gray-200">
+                  </div>
+                  <div>
+                    <label for="art-profession" class="block text-sm font-medium text-gray-700 mb-2">Profession</label>
+                    <select id="art-profession" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white">
+                      <option value="">Sélectionnez</option>
+                      <option value="electricien">Électricien</option>
+                      <option value="plombier">Plombier</option>
+                      <option value="menuisier">Menuisier</option>
+                      <option value="mecanicien">Mécanicien</option>
+                      <option value="couturier">Couturier</option>
+                      <option value="peintre">Peintre</option>
+                      <option value="reparateur">Réparateur</option>
+                      <option value="maçon">Maçon</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="art-location" class="block text-sm font-medium text-gray-700 mb-2">Commune</label>
+                    <select id="art-location" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white">
+                      <option value="">Sélectionnez</option>
+                      <option value="gombe">Gombe</option>
+                      <option value="ngaliema">Ngaliema</option>
+                      <option value="limete">Limete</option>
+                      <option value="bandalungwa">Bandalungwa</option>
+                      <option value="lemba">Lemba</option>
+                      <option value="matete">Matete</option>
+                      <option value="kintambo">Kintambo</option>
+                      <option value="barumbu">Barumbu</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="art-description" class="block text-sm font-medium text-gray-700 mb-2">Description de vos services</label>
+                    <textarea id="art-description" rows="3" required class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="Décrivez votre expérience et vos services..."></textarea>
+                  </div>
+                  <div>
+                    <label for="art-password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" id="art-password" required minlength="6" class="w-full px-4 py-3 rounded-xl border border-gray-200">
+                  </div>
+                  <button type="submit" class="w-full btn-primary py-3 rounded-xl text-white font-semibold">
+                    Soumettre ma candidature
+                  </button>
+                </form>
+              </div>
+            </div>
+          `;
+          break;
+      }
+      
+      container.innerHTML = modalContent;
+    }
+    
+    function closeModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('modal-container').innerHTML = '';
+    }
+    
+    // ==================== AUTH HANDLERS ====================
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      
+      // Find user in stored data
+      const user = appState.users.find(u => u.email === email && u.type === 'user');
+      
+      if (user) {
+        // Simple password check (in real app, use proper hashing)
+        if (user.password === btoa(password)) {
+          appState.currentUser = user;
+          updateAuthUI();
+          closeModal();
+          showToast('Connexion réussie! Bienvenue ' + user.name, 'success');
+          navigateTo('dashboard');
+        } else {
+          showToast('Mot de passe incorrect', 'error');
+        }
+      } else {
+        showToast('Aucun compte trouvé avec cet email', 'error');
+      }
+    }
+    
+    async function handleRegister(event) {
+      event.preventDefault();
+      
+      if (appState.users.length >= 999) {
+        showToast('Limite d\'utilisateurs atteinte', 'error');
+        return;
+      }
+      
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const phone = document.getElementById('reg-phone').value;
+      const password = document.getElementById('reg-password').value;
+      
+      // Check if email already exists
+      if (appState.users.some(u => u.email === email)) {
+        showToast('Cet email est déjà utilisé', 'error');
+        return;
+      }
+      
+      const newUser = {
+        type: 'user',
+        name,
+        email,
+        phone,
+        password: btoa(password), // Simple encoding (use proper hashing in production)
+        role: 'client',
+        created_at: new Date().toISOString()
+      };
+      
+      const result = await window.dataSdk.create(newUser);
+      
+      if (result.isOk) {
+        closeModal();
+        showToast('Compte créé avec succès! Vous pouvez maintenant vous connecter.', 'success');
+        openModal('login');
+      } else {
+        showToast('Erreur lors de la création du compte', 'error');
+      }
+    }
+    
+    async function handleArtisanRegister(event) {
+      event.preventDefault();
+      
+      if (appState.users.length >= 999) {
+        showToast('Limite d\'utilisateurs atteinte', 'error');
+        return;
+      }
+      
+      const newArtisan = {
+        type: 'user',
+        name: document.getElementById('art-name').value,
+        email: document.getElementById('art-email').value,
+        phone: document.getElementById('art-phone').value,
+        password: btoa(document.getElementById('art-password').value),
+        role: 'artisan',
+        profession: document.getElementById('art-profession').value,
+        location: document.getElementById('art-location').value,
+        description: document.getElementById('art-description').value,
+        rating: 0,
+        reviews_count: 0,
+        verified: false,
+        avatar_seed: Math.random().toString(36).substring(7),
+        created_at: new Date().toISOString()
+      };
+      
+      const result = await window.dataSdk.create(newArtisan);
+      
+      if (result.isOk) {
+        closeModal();
+        showToast('Candidature soumise! Vous serez contacté sous 48h.', 'success');
+      } else {
+        showToast('Erreur lors de la soumission', 'error');
+      }
+    }
+    
+    function logout() {
+      appState.currentUser = null;
+      updateAuthUI();
+      navigateTo('home');
+      showToast('Déconnexion réussie', 'info');
+    }
+    
+    function updateAuthUI() {
+      const authContainer = document.getElementById('nav-auth');
+      
+      if (appState.currentUser) {
+        const initials = appState.currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        authContainer.innerHTML = `
+          <button onclick="navigateTo('dashboard')" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-kin-light hover:bg-gray-200 transition">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-kin-primary to-kin-accent flex items-center justify-center text-white text-sm font-bold">
+              ${initials}
+            </div>
+            <span class="hidden md:inline text-kin-dark font-medium">${appState.currentUser.name.split(' ')[0]}</span>
+          </button>
+          <button onclick="logout()" class="px-3 py-2 text-gray-500 hover:text-kin-primary transition text-sm">
+            Déconnexion
+          </button>
+        `;
+      } else {
+        authContainer.innerHTML = `
+          <button onclick="openModal('login')" class="px-3 py-2 md:px-5 md:py-2.5 text-kin-dark font-medium hover:text-kin-primary transition text-sm md:text-base">
+            Connexion
+          </button>
+          <button onclick="openModal('register')" class="btn-primary px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-white font-semibold text-sm md:text-base">
+            S'inscrire
+          </button>
+        `;
+      }
+    }
+    
+    // ==================== DASHBOARD ====================
+    function switchDashboardTab(tabId) {
+      // Update tab buttons
+      document.querySelectorAll('.dashboard-tab').forEach(tab => {
+        if (tab.dataset.tab === tabId) {
+          tab.classList.add('tab-active');
+          tab.classList.remove('bg-white', 'text-gray-600');
+        } else {
+          tab.classList.remove('tab-active');
+          tab.classList.add('bg-white', 'text-gray-600');
+        }
+      });
+      
+      // Update tab content
+      document.querySelectorAll('.dashboard-tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+    }
+    
+    function renderDashboard() {
+      if (!appState.currentUser) return;
+      
+      const initials = appState.currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+      
+      document.getElementById('user-avatar-large').textContent = initials;
+      document.getElementById('dashboard-welcome').textContent = `Bienvenue, ${appState.currentUser.name}!`;
+      document.getElementById('dashboard-subtitle').textContent = 
+        appState.currentUser.role === 'artisan' ? 'Gérez votre activité et vos demandes' : 'Gérez votre compte et vos réservations';
+      
+      // Count bookings and reviews for this user
+      const userBookings = appState.bookings.filter(b => b.user_id === appState.currentUser.__backendId);
+      const userReviews = appState.reviews.filter(r => r.user_id === appState.currentUser.__backendId);
+      
+      document.getElementById('stat-bookings').textContent = userBookings.length;
+      document.getElementById('stat-reviews').textContent = userReviews.length;
+      document.getElementById('stat-messages').textContent = 0;
+      
+      // Populate profile form
+      document.getElementById('profile-name').value = appState.currentUser.name || '';
+      document.getElementById('profile-email').value = appState.currentUser.email || '';
+      document.getElementById('profile-phone').value = appState.currentUser.phone || '';
+      document.getElementById('profile-location').value = appState.currentUser.location || '';
+      
+      // Render bookings list
+      renderBookingsList(userBookings);
+      
+      // Render reviews list
+      renderReviewsList(userReviews);
+    }
+    
+    function renderBookingsList(bookings) {
+      const container = document.getElementById('bookings-list');
+      
+      if (bookings.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">Vous n\'avez pas encore de réservations</p>';
+        return;
+      }
+      
+      container.innerHTML = bookings.map(booking => {
+        const artisan = sampleArtisans.find(a => a.id === booking.artisan_id);
+        const statusColors = {
+          'pending': 'bg-yellow-100 text-yellow-700',
+          'accepted': 'bg-green-100 text-green-700',
+          'completed': 'bg-blue-100 text-blue-700',
+          'cancelled': 'bg-red-100 text-red-700'
+        };
+        const statusLabels = {
+          'pending': 'En attente',
+          'accepted': 'Accepté',
+          'completed': 'Terminé',
+          'cancelled': 'Annulé'
+        };
+        
+        return `
+          <div class="p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-semibold text-kin-dark">${artisan ? artisan.name : 'Artisan'}</span>
+              <span class="px-3 py-1 rounded-full text-xs font-medium ${statusColors[booking.status] || 'bg-gray-100 text-gray-700'}">
+                ${statusLabels[booking.status] || booking.status}
+              </span>
+            </div>
+            <p class="text-gray-600 text-sm">${booking.service_description}</p>
+            <p class="text-gray-400 text-xs mt-2">${new Date(booking.created_at).toLocaleDateString('fr-FR')}</p>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function renderReviewsList(reviews) {
+      const container = document.getElementById('reviews-list');
+      
+      if (reviews.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">Vous n\'avez pas encore donné d\'avis</p>';
+        return;
+      }
+      
+      container.innerHTML = reviews.map(review => {
+        const artisan = sampleArtisans.find(a => a.id === review.artisan_id);
+        const stars = '⭐'.repeat(review.review_rating || 5);
+        
+        return `
+          <div class="p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-yellow-500">${stars}</span>
+              <span class="font-semibold text-kin-dark">${artisan ? artisan.name : 'Artisan'}</span>
+            </div>
+            <p class="text-gray-600 text-sm">${review.message}</p>
+            <p class="text-gray-400 text-xs mt-2">${new Date(review.created_at).toLocaleDateString('fr-FR')}</p>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    async function updateProfile(event) {
+      event.preventDefault();
+      
+      if (!appState.currentUser) return;
+      
+      const updatedUser = {
+        ...appState.currentUser,
+        name: document.getElementById('profile-name').value,
+        email: document.getElementById('profile-email').value,
+        phone: document.getElementById('profile-phone').value,
+        location: document.getElementById('profile-location').value
+      };
+      
+      const result = await window.dataSdk.update(updatedUser);
+      
+      if (result.isOk) {
+        appState.currentUser = updatedUser;
+        showToast('Profil mis à jour!', 'success');
+        updateAuthUI();
+      } else {
+        showToast('Erreur lors de la mise à jour', 'error');
+      }
+    }
+    
+    // ==================== BOOKING & CHAT ====================
+    async function submitBookingRequest(event, artisanId) {
+      event.preventDefault();
+      
+      if (!appState.currentUser) {
+        showToast('Veuillez vous connecter pour envoyer une demande', 'info');
+        openModal('login');
+        return;
+      }
+      
+      if (appState.bookings.length >= 999) {
+        showToast('Limite de réservations atteinte', 'error');
+        return;
+      }
+      
+      const description = document.getElementById('booking-description').value;
+      
+      const booking = {
+        type: 'booking',
+        artisan_id: artisanId,
+        user_id: appState.currentUser.__backendId,
+        user_name: appState.currentUser.name,
+        service_description: description,
+        status: 'pending',
+        created_at: new Date().toISOString()
+      };
+      
+      const result = await window.dataSdk.create(booking);
+      
+      if (result.isOk) {
+        document.getElementById('booking-description').value = '';
+        showToast('Demande de devis envoyée! L\'artisan vous contactera sous 24h.', 'success');
+      } else {
+        showToast('Erreur lors de l\'envoi de la demande', 'error');
+      }
+    }
+    
+    function openChat(artisanId) {
+      if (!appState.currentUser) {
+        showToast('Veuillez vous connecter pour envoyer un message', 'info');
+        openModal('login');
+        return;
+      }
+      
+      const artisan = sampleArtisans.find(a => a.id === artisanId);
+      if (!artisan) return;
+      
+      const container = document.getElementById('modal-container');
+      container.innerHTML = `
+        <div class="modal-overlay" onclick="closeModal(event)">
+          <div class="modal-content p-0 max-w-md" onclick="event.stopPropagation()">
+            <div class="p-4 bg-kin-dark rounded-t-3xl">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-xl">
+                    ${professionIcons[artisan.profession] || '👷'}
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-white">${artisan.name}</h3>
+                    <p class="text-xs text-gray-400">En ligne</p>
+                  </div>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="h-64 p-4 bg-gray-50 overflow-y-auto">
+              <div class="flex justify-center">
+                <span class="text-xs text-gray-400 bg-white px-3 py-1 rounded-full">Début de la conversation</span>
+              </div>
+            </div>
+            <div class="p-4 bg-white rounded-b-3xl border-t">
+              <form onsubmit="sendMessage(event, '${artisanId}')" class="flex gap-2">
+                <input type="text" id="chat-message" placeholder="Votre message..." class="flex-1 px-4 py-2 rounded-xl border border-gray-200">
+                <button type="submit" class="btn-primary px-4 py-2 rounded-xl text-white">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                  </svg>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function sendMessage(event, artisanId) {
+      event.preventDefault();
+      const message = document.getElementById('chat-message').value;
+      if (!message.trim()) return;
+      
+      // In a real app, this would send to a chat backend
+      showToast('Message envoyé!', 'success');
+      document.getElementById('chat-message').value = '';
+      closeModal();
+    }
+    
+    // ==================== SDK INITIALIZATION ====================
+    const dataHandler = {
+      onDataChanged(data) {
+        // Separate data by type
+        appState.users = data.filter(d => d.type === 'user');
+        appState.bookings = data.filter(d => d.type === 'booking');
+        appState.reviews = data.filter(d => d.type === 'review');
+        
+        // Re-render if on dashboard
+        if (appState.currentPage === 'dashboard' && appState.currentUser) {
+          // Update current user data if it exists in the store
+          const updatedUser = appState.users.find(u => u.__backendId === appState.currentUser.__backendId);
+          if (updatedUser) {
+            appState.currentUser = updatedUser;
+          }
+          renderDashboard();
+        }
+      }
+    };
+    
+    async function onConfigChange(cfg) {
+      config = { ...defaultConfig, ...cfg };
+      
+      // Update hero title
+      const heroTitle = document.getElementById('hero-title');
+      if (heroTitle) {
+        const titleText = config.hero_title || defaultConfig.hero_title;
+        const words = titleText.split(' ');
+        const lastWord = words.pop();
+        heroTitle.innerHTML = `${words.join(' ')} <span class="text-gradient">${lastWord}</span>`;
+      }
+      
+      // Update hero subtitle
+      const heroSubtitle = document.getElementById('hero-subtitle');
+      if (heroSubtitle) {
+        heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+      }
+      
+      // Update CTA button
+      const ctaButton = document.getElementById('cta-button');
+      if (ctaButton) {
+        ctaButton.textContent = config.cta_button_text || defaultConfig.cta_button_text;
+      }
+    }
+    
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => { cfg.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => cfg.surface_color || defaultConfig.surface_color,
+            set: (value) => { cfg.surface_color = value; window.elementSdk.setConfig({ surface_color: value }); }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => { cfg.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => { cfg.primary_action_color = value; window.elementSdk.setConfig({ primary_action_color: value }); }
+          },
+          {
+            get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => { cfg.secondary_action_color = value; window.elementSdk.setConfig({ secondary_action_color: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+    
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['hero_title', cfg.hero_title || defaultConfig.hero_title],
+        ['hero_subtitle', cfg.hero_subtitle || defaultConfig.hero_subtitle],
+        ['cta_button_text', cfg.cta_button_text || defaultConfig.cta_button_text]
+      ]);
+    }
+    
+    // Initialize SDKs
+    async function initApp() {
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+      
+      // Initialize Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+      
+      // Initial render
+      renderFeaturedArtisans();
+    }
+    
+    initApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d79189bc06a3575',t:'MTc3MjcxMzQ1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
